@@ -1,26 +1,31 @@
-<div class="container">
-    <h1>HI</h1>
+<h1>HI</h1>
     
-    <form href="/postings/create" method="POST">
-      <div class="form-group">
-        <label for="title">Title:</label>
-        <input type="title" name="title" class="form-control" id="title">
-      </div>
-      <div class="form-group">
-        <label for="body">Body:</label>
-        <textarea name="body" rows="5" class="form-control" id="body"></textarea>
-      </div>
-
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    <div>
-      <% @all_postings.each do |p| %>
-      <h3><%= p.title %></h3>
-      <p><%= p.body %></p>
-      <button type="delete" class="btn btn-danger" name="delete">Delete</button>
+<form method="POST">
+  <div class="form-group">
+    <label for="title">Title:</label>
+    <input type="title" name="title" class="form-control" id="title">
+  </div>
+  <div class="form-group">
+    <label for="body">Body:</label>
+    <textarea name="body" rows="5" class="form-control" id="body"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<% @all_postings.each do |p| %>
+  <h3><%= p.title %></h3>
+  <p><%= p.body %></p>
+  <form action="/comment/create" method="POST">
+    <label for="comment">Comment:</label>
+    <%= hidden_field_tag(:id_of_posting, p.id) %>
+    <input type="comment" name="content" class="form-control" id="comment">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <% @all_comments.each do |c| %>
+    <% if c.posting_id == p.id %>
+      <p><%= c.content %></p>
     <% end %>
-    </div>  
-</div>
+  <% end %>
+<% end %>
 
 
 

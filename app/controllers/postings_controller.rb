@@ -1,6 +1,7 @@
 class PostingsController < ApplicationController
     def index
         @all_postings = Posting.all.order('id DESC')
+        @all_comments = Comment.all.order('id DESC')
     end
     
     def create
