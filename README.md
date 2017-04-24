@@ -1,6 +1,7 @@
 #README
 
 #MODEL
+
 1. Users
  -Relationship
     has_many : postings
