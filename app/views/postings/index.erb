@@ -1,5 +1,6 @@
-<h1>HI</h1>
-    
+<h1>Board Page</h1>
+
+<h4 style="color:red;"><%= flash[:error] %></h4>
 <form method="POST">
   <div class="form-group">
     <label for="title">Title:</label>
@@ -11,24 +12,56 @@
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+
 <% @all_postings.each do |p| %>
-  <h3><%= p.title %></h3>
+  <br/>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h4><span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;<b><%= p.user.email %></b></h4>
+    </div>
+    <div class="panel-body">
+  <p><b><%= p.title %></b></p>
   <p><%= p.body %></p>
-  <a href="/update_view/<%= p.id %>" class="btn btn-default">Re-write</a>
+  <a href="/update_view/<%= p.id %>" class="btn btn-success">Re-write</a>
   <a href="/destroy/<%= p.id %>" class="btn btn-danger">Delete</a>
-  <form action="/comment/create" method="POST">
+  <hr>
+  
+    <form method="post" action="/comment/create">
     <label for="comment">Comment:</label>
     <%= hidden_field_tag(:id_of_posting, p.id) %>
-    <input type="comment" name="content" class="form-control" id="comment">
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+    <input type="comment" name="content" class="form-control" id="comment_<%= p.id %>">
+    <button value="<%= p.id %>" type="submit" class="btn btn-primary reply_submit">Submit</button>
+    </form>
+  <div class="reply_<%= p.id %>">
   <% @all_comments.each do |c| %>
     <% if c.posting_id == p.id %>
-      <p><%= c.content %></p>
-      <a href="comments/destory/<%= c.id %>">delete</a>
+      <span style="color: red;"><b><%= c.user.email %> > </b></span>  <%= c.content %><br/>
+      <a href="/comments/destroy/<%= c.id %>">delete</a><br/>
     <% end %>
   <% end %>
+  </div>
+  </div>
+  </div>
 <% end %>
 
-
+<script>
+//if clicked reply_submit 
+$(document).ready(function){
+  $('.reply_submit').click(function(){
+    posting_id = this.value;
+    content = $("#comment_" + posting_id).val();
+    $.ajax({
+      method: "POST",
+      url: "/comment/create",
+      data: { content: content, id_of_posting: posting_id},
+      success: function(){
+              $(".reply_" + posting_id).append(content);
+      },
+      error: function(){
+              alert("failed");
+      }
+    })
+  });
+});
+</script>
 

@@ -1,12 +1,13 @@
 Rails.application.routes.draw do
+  devise_for :users
   root 'postings#index'
   get '/index' => 'postings#index'
   post '/' => 'postings#create'
-
   post '/index' => 'postings#create'
   post '/comment/create' => 'comments#create'
   get 'update_view/:post_id' => 'postings#update_view'
-  get 'destroy/:post_id' => 'postings#destroy'
+  get '/destroy/:post_id' => 'postings#destroy'
+  get '/comments/destroy/:comment_id' => 'comments#destroy'
   post '/real_update/:post_id' => 'postings#real'
   
   # The priority is based upon order of creation: first created -> highest priority.
